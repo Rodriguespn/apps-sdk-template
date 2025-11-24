@@ -1,12 +1,13 @@
-# ChatGPT Apps SDK Alpic Starter
+# Flashcard Language Learning App
 
-This repository is a minimal Typescript application demonstrating how to build an OpenAI Apps SDK compatible MCP server with widget rendering in ChatGPT.
-
-![Demo](docs/demo.gif)
+This is a language learning flashcard application built with the ChatGPT Apps SDK and Model Context Protocol (MCP). It demonstrates how to build an interactive widget-based application that integrates natively with ChatGPT.
 
 ## Overview
 
-This project shows how to integrate a Typescript express application with the ChatGPT Apps SDK using the Model Context Protocol (MCP). It includes a working MCP server that exposes tools and resources that can be called from ChatGPT, with responses rendered natively in ChatGPT. It also includes MCP tools without UI widget.
+This application provides an interactive flashcard study experience for learning languages (Spanish, French, German, Italian, and Portuguese) with configurable difficulty levels and deck sizes. It includes:
+
+- **createFlashcardDeck** - Interactive widget for configuring study preferences (language, difficulty, deck size)
+- **startStudySession** - Interactive flashcard viewer with flip animations and progress tracking
 
 ## Getting Started
 
@@ -66,7 +67,7 @@ Forwarding     https://3785c5ddc4b6.ngrok-free.app -> http://localhost:3000
 
 - Start a new conversation in ChatGPT
 - Select your newly created connector using **+ → Plus → Your connector**
-- Try prompting the model (e.g., "Show me pikachu details")
+- Try prompting the model (e.g., "Create a Spanish flashcard deck" or "Start a study session")
 
 #### 6. Develop with HMR
 
@@ -88,7 +89,8 @@ Now you can edit React components in `web` and see changes instantly:
 
 For example:
 
-- If you create a widget endpoint named `pokemon-card`, you must create a corresponding React component file at `web/src/widgets/pokemon-card.tsx`
+- The widget endpoint `createFlashcardDeck` corresponds to `web/src/widgets/createFlashcardDeck.tsx`
+- The widget endpoint `startStudySession` corresponds to `web/src/widgets/startStudySession.tsx`
 - The endpoint name and the widget file name (without the `.tsx` extension) must be identical
 
 This naming convention allows the system to automatically map widget requests to their corresponding React components.

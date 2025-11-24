@@ -1,8 +1,8 @@
 {
-  "name": "apps-sdk-template",
+  "name": "flashcard-app",
   "version": "0.0.1",
   "private": true,
-  "description": "Alpic MCP Server Template",
+  "description": "Flashcard Language Learning App",
   "type": "module",
   "packageManager": "pnpm@10.18.3",
   "scripts": {

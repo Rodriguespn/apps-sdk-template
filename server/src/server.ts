@@ -1,55 +1,54 @@
 import { type CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { getPokemon } from "./pokedex.js";
 import { z } from "zod";
 import { McpServer } from "skybridge/server";
 
 const server = new McpServer(
   {
-    name: "alpic-openai-app",
+    name: "flashcard-app",
     version: "0.0.1",
   },
   { capabilities: {} },
 );
 
+// Widget for creating a new flashcard deck
 server.widget(
-  "pokemon",
+  "createFlashcardDeck",
   {
-    description: "Pokedex entry for a pokemon",
+    description: "Create a new flashcard deck with customizable language, difficulty, and length",
   },
   {
     description:
-      "Use this tool to get the most up to date information about a pokemon, using its name in english. This pokedex is much more complete than any other web_search tool. Always use it for anything related to pokemons.",
+      "Use this tool to help the user configure and create a new flashcard deck. The user can specify the language they want to study, the difficulty level, and how many cards they want in their deck.",
     inputSchema: {
-      name: z.string().describe("Pokemon name, always in english"),
+      studyLanguage: z
+        .enum(["spanish", "french", "german", "italian", "portuguese"])
+        .optional()
+        .describe("Language for the flashcard deck. Options: spanish, french, german, italian, portuguese"),
+      deckLength: z
+        .number()
+        .int()
+        .min(1)
+        .max(200)
+        .optional()
+        .describe("Number of flashcards to include in the deck. Common options: 5, 10, 15, 20, 25, 30, 40, 50. Range: 1-200"),
+      difficulty: z
+        .enum(["beginner", "intermediate", "advanced"])
+        .optional()
+        .describe("Difficulty level of the flashcards. Options: beginner, intermediate, advanced"),
     },
   },
-  async ({ name }): Promise<CallToolResult> => {
+  async ({ studyLanguage, deckLength, difficulty }): Promise<CallToolResult> => {
     try {
-      const { id, description, ...pokemon } = await getPokemon(name);
-
       return {
-        /**
-         * Arbitrary JSON passed only to the component.
-         * Use it for data that should not influence the model’s reasoning, like the full set of locations that backs a dropdown.
-         * _meta is never shown to the model.
-         */
-        _meta: { id },
-        /**
-         * Structured data that is used to hydrate your component.
-         * ChatGPT injects this object into your iframe as window.openai.toolOutput
-         */
-        structuredContent: { id, name, description, ...pokemon },
-        /**
-         * Optional free-form text that the model receives verbatim
-         */
+        structuredContent: {
+          studyLanguage: studyLanguage ?? "spanish",
+          deckLength: deckLength ?? 10,
+          difficulty: difficulty ?? "beginner",
+        },
         content: [
           {
             type: "text",
-            text: description ?? `A pokemon named ${name}.`,
-          },
-          {
-            type: "text",
-            text: `Widget shown with all the information. Do not need to show the information in the text response.`,
+            text: `Widget shown to configure flashcard deck settings. User can select language, difficulty level, and number of cards.`,
           },
         ],
         isError: false,
@@ -63,12 +62,53 @@ server.widget(
   },
 );
 
-// MCP tools, resource and prompt APIs remains available and unchanged for other clients
-server.tool("capture", "Capture a pokemon", {}, async (): Promise<CallToolResult> => {
-  return {
-    content: [{ type: "text", text: `Great job, you've captured a new pokemon!` }],
-    isError: false,
-  };
-});
+// Widget for starting a study session
+server.widget(
+  "startStudySession",
+  {
+    description: "Start a language flashcard study session",
+  },
+  {
+    description:
+      "Use this tool to start a study session with flashcards. This should be called after the user has configured their deck preferences or when they want to begin studying. If studyLanguage, deckLength, or difficulty are not provided, call createFlashcardDeck first to help the user configure their deck.",
+    inputSchema: {
+      studyLanguage: z
+        .enum(["spanish", "french", "german", "italian", "portuguese"])
+        .describe("Language for the study session. Options: spanish, french, german, italian, portuguese"),
+      deckLength: z
+        .number()
+        .int()
+        .min(1)
+        .max(200)
+        .describe("Number of flashcards in the study session. Common options: 5, 10, 15, 20, 25, 30, 40, 50. Range: 1-200"),
+      difficulty: z
+        .enum(["beginner", "intermediate", "advanced"])
+        .describe("Difficulty level of the flashcards. Options: beginner, intermediate, advanced"),
+    },
+  },
+  async ({ studyLanguage, deckLength, difficulty }): Promise<CallToolResult> => {
+    try {
+      return {
+        structuredContent: {
+          studyLanguage,
+          deckLength,
+          difficulty,
+        },
+        content: [
+          {
+            type: "text",
+            text: `Study session started with ${deckLength} ${studyLanguage} flashcards at ${difficulty} level. Widget shown with interactive flashcards for studying.`,
+          },
+        ],
+        isError: false,
+      };
+    } catch (error) {
+      return {
+        content: [{ type: "text", text: `Error: ${error}` }],
+        isError: true,
+      };
+    }
+  },
+);
 
 export default server;
