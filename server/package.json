@@ -12,6 +12,7 @@
     "dev": "nodemon",
     "build": "tsc",
     "start": "node dist/index.js",
+    "test": "vitest",
     "inspector": "mcp-inspector http://localhost:3000/mcp"
   },
   "dependencies": {
@@ -32,6 +33,7 @@
     "@types/node": "^22.15.30",
     "nodemon": "^3.1.10",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^4.0.14"
   }
 }

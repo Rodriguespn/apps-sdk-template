@@ -1,4 +1,3 @@
-import { type CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { McpServer } from "skybridge/server";
 import {
@@ -7,6 +6,7 @@ import {
   LANGUAGES,
   DIFFICULTIES,
 } from "@study-buddy/shared";
+import { handleCreateFlashcardDeck, handleStartStudySession } from "./handlers.js";
 
 const server = new McpServer(
   {
@@ -41,33 +41,7 @@ server.widget(
       ),
     },
   },
-  async ({ studyLanguage, deckLength, difficulty }): Promise<CallToolResult> => {
-    try {
-      const finalLanguage = studyLanguage ?? "spanish";
-      const finalLength = deckLength ?? 10;
-      const finalDifficulty = difficulty ?? "beginner";
-
-      return {
-        structuredContent: {
-          studyLanguage: finalLanguage,
-          deckLength: finalLength,
-          difficulty: finalDifficulty,
-        },
-        content: [
-          {
-            type: "text",
-            text: `Deck configuration received: ${finalLength} ${finalLanguage} flashcards at ${finalDifficulty} level. Now generate a flashcard deck with appropriate vocabulary and call startStudySession with the generated deck.`,
-          },
-        ],
-        isError: false,
-      };
-    } catch (error) {
-      return {
-        content: [{ type: "text", text: `Error: ${error}` }],
-        isError: true,
-      };
-    }
-  },
+  handleCreateFlashcardDeck,
 );
 
 // Widget for starting a study session
@@ -96,29 +70,7 @@ server.widget(
         .describe("Array of flashcards with words and their translations. Generate flashcards based on the theme, language, length, and difficulty requested by the user."),
     },
   },
-  async ({ studyLanguage, difficulty, deck }): Promise<CallToolResult> => {
-    try {
-      return {
-        structuredContent: {
-          studyLanguage,
-          difficulty,
-          deck,
-        },
-        content: [
-          {
-            type: "text",
-            text: `Study session started with ${deck.length} ${studyLanguage} flashcards at ${difficulty} level. Widget shown with interactive flashcards for studying.`,
-          },
-        ],
-        isError: false,
-      };
-    } catch (error) {
-      return {
-        content: [{ type: "text", text: `Error: ${error}` }],
-        isError: true,
-      };
-    }
-  },
+  handleStartStudySession,
 );
 
 export default server;
