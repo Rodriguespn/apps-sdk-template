@@ -1,31 +1,22 @@
 import { useState } from "react";
-import { mountWidget, useToolOutput } from "skybridge/web";
-import "@/index.css";
-import { type Language, type Difficulty, type Flashcard } from "@study-buddy/shared";
-import { languageNames, difficultyColorStyles, getThemeTokens } from "./shared/shared-flashcard";
+import { type Difficulty, type Flashcard, type Language } from "@study-buddy/shared";
+import { difficultyColorStyles, getThemeTokens, languageNames } from "./shared-flashcard";
 
 /*
- * startStudySession widget
- * Interactive flashcard study session with complete deck data.
- * The LLM should generate a flashcard deck with a specific theme, language, length, and difficulty.
- * Props include the study language, difficulty level, and an array of flashcards.
+ * StudySessionUI component
+ * Shared UI for flashcard study sessions.
+ * Used by both startStudySessionFromDeck and startStudySessionFromScratch widgets.
  */
 
-type WidgetProps = {
+type StudySessionUIProps = {
   studyLanguage: Language;
   difficulty: Difficulty;
   deck: Flashcard[];
 };
 
-const StartStudySession = () => {
-  const toolOutput = useToolOutput() as WidgetProps;
+export const StudySessionUI = ({ studyLanguage, difficulty, deck }: StudySessionUIProps) => {
   const theme = window.openai?.theme || "light";
   const tokens = getThemeTokens(theme);
-
-  // Provide safe defaults in case props are not yet populated or missing.
-  const studyLanguage: Language = toolOutput?.studyLanguage ?? "french";
-  const difficulty: Difficulty = toolOutput?.difficulty ?? "beginner";
-  const deck: Flashcard[] = toolOutput?.deck ?? [];
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -163,7 +154,3 @@ const StartStudySession = () => {
     </div>
   );
 };
-
-export default StartStudySession;
-
-mountWidget(<StartStudySession />);

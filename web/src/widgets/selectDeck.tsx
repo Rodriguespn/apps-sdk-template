@@ -1,6 +1,7 @@
-import { mountWidget, useToolOutput, useCallTool, type CallToolResponse } from "skybridge/web";
+import { mountWidget, useToolOutput } from "skybridge/web";
 import "@/index.css";
-import { type Deck } from "@study-buddy/shared";
+import type { Deck } from "@study-buddy/shared";
+import { useSendFollowUpMessage } from "../hooks/useSendFollowUpMessage";
 import {
   languageNames,
   difficultyLabels,
@@ -20,28 +21,22 @@ type WidgetProps = {
 
 const SelectDeck = () => {
   const toolOutput = useToolOutput() as WidgetProps;
+  const { sendFollowUpMessage } = useSendFollowUpMessage();
   const theme = window.openai?.theme || "light";
   const tokens = getThemeTokens(theme);
 
-  const { callTool: callStartStudySession, isPending: isStarting } = useCallTool<
-    { deckId: string },
-    CallToolResponse
-  >("startStudySession");
-
-  const { callTool: callCreateFlashcardDeck, isPending: isCreating } = useCallTool<
-    Record<string, never>,
-    CallToolResponse
-  >("createFlashcardDeck");
-
   const decks = toolOutput?.decks ?? [];
-  const isPending = isStarting || isCreating;
 
   const handleSelectDeck = (deck: Deck) => {
-    callStartStudySession({ deckId: deck.id });
+    sendFollowUpMessage(
+      `The user selected the deck "${deck.name}" (ID: ${deck.id}) to study. Please start a study session with this deck by calling startStudySessionFromDeck with deckId: ${deck.id}`
+    );
   };
 
   const handleCreateDeck = () => {
-    callCreateFlashcardDeck({});
+    sendFollowUpMessage(
+      "The user wants to create a new flashcard deck. Please show them the deck creation interface by calling createFlashcardDeck."
+    );
   };
 
   const formatDate = (dateString: string) => {
@@ -65,10 +60,9 @@ const SelectDeck = () => {
         <button
           type="button"
           onClick={handleCreateDeck}
-          disabled={isPending}
-          className="w-full px-6 py-4 rounded-xl font-bold text-lg text-white bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          className="w-full px-6 py-4 rounded-xl font-bold text-lg text-white bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
         >
-          {isCreating ? "Creating..." : "+ Create New Deck"}
+          + Create New Deck
         </button>
       </div>
 
@@ -87,8 +81,7 @@ const SelectDeck = () => {
               key={deck.id}
               type="button"
               onClick={() => handleSelectDeck(deck)}
-              disabled={isPending}
-              className={`w-full text-left p-5 rounded-xl border-2 ${tokens.surface} shadow-md transition-all hover:scale-[1.01] active:scale-[0.99] ${tokens.hover} disabled:opacity-50 disabled:cursor-not-allowed`}
+              className={`w-full text-left p-5 rounded-xl border-2 ${tokens.surface} shadow-md transition-all hover:scale-[1.01] active:scale-[0.99] ${tokens.hover}`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">

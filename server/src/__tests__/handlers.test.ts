@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   handleCreateFlashcardDeck,
-  handleStartStudySession,
+  handleStartStudySessionFromDeck,
+  handleStartStudySessionFromScratch,
   handleSelectDeck,
   handleSaveDeck,
 } from "../handlers.js";
@@ -116,14 +117,7 @@ describe("saveDeck handler", () => {
   });
 });
 
-describe("startStudySession handler", () => {
-  it("returns error when neither deckId nor deck data provided", async () => {
-    const result = await handleStartStudySession({});
-
-    expect(result.isError).toBe(true);
-    expect(result.content?.[0]).toHaveProperty("text", expect.stringContaining("Either deckId or"));
-  });
-
+describe("startStudySessionFromDeck handler", () => {
   it("loads deck from database when deckId is provided", async () => {
     const mockDeck = {
       id: "deck-123",
@@ -137,7 +131,7 @@ describe("startStudySession handler", () => {
     };
     mockGetDeckById.mockResolvedValue(mockDeck);
 
-    const result = await handleStartStudySession({ deckId: "deck-123" });
+    const result = await handleStartStudySessionFromDeck({ deckId: "deck-123" });
 
     expect(result.isError).toBe(false);
     expect(result.structuredContent).toEqual({
@@ -150,19 +144,21 @@ describe("startStudySession handler", () => {
   it("returns error when deckId not found", async () => {
     mockGetDeckById.mockResolvedValue(null);
 
-    const result = await handleStartStudySession({ deckId: "nonexistent" });
+    const result = await handleStartStudySessionFromDeck({ deckId: "nonexistent" });
 
     expect(result.isError).toBe(true);
     expect(result.content?.[0]).toHaveProperty("text", expect.stringContaining("Deck not found"));
   });
+});
 
-  it("uses provided deck data directly (legacy mode)", async () => {
+describe("startStudySessionFromScratch handler", () => {
+  it("returns deck data directly", async () => {
     const deck = [
       { word: "bonjour", translation: "hello" },
       { word: "merci", translation: "thank you" },
     ];
 
-    const result = await handleStartStudySession({
+    const result = await handleStartStudySessionFromScratch({
       studyLanguage: "french",
       difficulty: "beginner",
       deck,

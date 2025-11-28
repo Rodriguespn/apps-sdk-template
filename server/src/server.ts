@@ -5,7 +5,8 @@ import {
   handleSelectDeck,
   handleCreateFlashcardDeck,
   handleSaveDeck,
-  handleStartStudySession,
+  handleStartStudySessionFromDeck,
+  handleStartStudySessionFromScratch,
 } from "./handlers.js";
 
 const server = new McpServer(
@@ -82,22 +83,37 @@ server.tool(
   handleSaveDeck
 );
 
-// Widget for starting a study session
+// Widget for starting a study session from a saved deck
 server.widget(
-  "startStudySession",
+  "startStudySessionFromDeck",
   {
-    description: "Start a language flashcard study session",
+    description: "Start a language flashcard study session from a saved deck",
   },
   {
     description:
-      "Use this tool to start a study session. You can either provide a deckId to load a saved deck from the database, or provide the deck data directly (legacy mode).",
+      "Use this tool to start a study session by loading a saved deck from the database. Requires the deck ID.",
     inputSchema: {
-      deckId: z.string().uuid().optional().describe("ID of a saved deck to load from the database"),
-      studyLanguage: LanguageSchema.optional().describe(
-        `Language for the study session (required if not using deckId). Options: ${LANGUAGES.join(", ")}`
+      deckId: z.string().uuid().describe("ID of a saved deck to load from the database"),
+    },
+  },
+  handleStartStudySessionFromDeck
+);
+
+// Widget for starting a study session with deck data provided directly
+server.widget(
+  "startStudySessionFromScratch",
+  {
+    description: "Start a language flashcard study session with provided deck data",
+  },
+  {
+    description:
+      "Use this tool to start a study session with flashcard data provided directly. Use this after generating flashcards and saving the deck.",
+    inputSchema: {
+      studyLanguage: LanguageSchema.describe(
+        `Language for the study session. Options: ${LANGUAGES.join(", ")}`
       ),
-      difficulty: DifficultySchema.optional().describe(
-        `Difficulty level (required if not using deckId). Options: ${DIFFICULTIES.join(", ")}`
+      difficulty: DifficultySchema.describe(
+        `Difficulty level. Options: ${DIFFICULTIES.join(", ")}`
       ),
       deck: z
         .array(
@@ -106,11 +122,10 @@ server.widget(
             translation: z.string().describe("The translation of the word in English"),
           })
         )
-        .optional()
-        .describe("Array of flashcards (required if not using deckId)"),
+        .describe("Array of flashcards to study"),
     },
   },
-  handleStartStudySession
+  handleStartStudySessionFromScratch
 );
 
 export default server;

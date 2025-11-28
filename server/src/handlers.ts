@@ -22,12 +22,14 @@ export type SaveDeckInput = {
   cards: Flashcard[];
 };
 
-export type StartStudySessionInput = {
-  deckId?: string;
-  // Legacy support for direct deck passing
-  studyLanguage?: Language;
-  difficulty?: Difficulty;
-  deck?: Flashcard[];
+export type StartStudySessionFromDeckInput = {
+  deckId: string;
+};
+
+export type StartStudySessionFromScratchInput = {
+  studyLanguage: Language;
+  difficulty: Difficulty;
+  deck: Flashcard[];
 };
 
 export async function handleSelectDeck({ userId }: SelectDeckInput): Promise<CallToolResult> {
@@ -126,56 +128,56 @@ export async function handleSaveDeck({
   }
 }
 
-export async function handleStartStudySession({
+export async function handleStartStudySessionFromDeck({
   deckId,
-  studyLanguage,
-  difficulty,
-  deck,
-}: StartStudySessionInput): Promise<CallToolResult> {
+}: StartStudySessionFromDeckInput): Promise<CallToolResult> {
   try {
-    let finalDeck: Flashcard[];
-    let finalLanguage: Language;
-    let finalDifficulty: Difficulty;
-
-    if (deckId) {
-      // Load deck from database
-      const savedDeck = await getDeckById(deckId, TEMP_USER_ID);
-      if (!savedDeck) {
-        return {
-          content: [{ type: "text", text: `Deck not found: ${deckId}` }],
-          isError: true,
-        };
-      }
-      finalDeck = savedDeck.cards;
-      finalLanguage = savedDeck.language;
-      finalDifficulty = savedDeck.difficulty;
-    } else if (deck && studyLanguage && difficulty) {
-      // Legacy: use provided deck directly
-      finalDeck = deck;
-      finalLanguage = studyLanguage;
-      finalDifficulty = difficulty;
-    } else {
+    const savedDeck = await getDeckById(deckId, TEMP_USER_ID);
+    if (!savedDeck) {
       return {
-        content: [
-          {
-            type: "text",
-            text: "Either deckId or (studyLanguage, difficulty, deck) must be provided",
-          },
-        ],
+        content: [{ type: "text", text: `Deck not found: ${deckId}` }],
         isError: true,
       };
     }
 
     return {
       structuredContent: {
-        studyLanguage: finalLanguage,
-        difficulty: finalDifficulty,
-        deck: finalDeck,
+        studyLanguage: savedDeck.language,
+        difficulty: savedDeck.difficulty,
+        deck: savedDeck.cards,
       },
       content: [
         {
           type: "text",
-          text: `Study session started with ${finalDeck.length} ${finalLanguage} flashcards at ${finalDifficulty} level. Widget shown with interactive flashcards for studying.`,
+          text: `Study session started with ${savedDeck.cards.length} ${savedDeck.language} flashcards at ${savedDeck.difficulty} level. Widget shown with interactive flashcards for studying.`,
+        },
+      ],
+      isError: false,
+    };
+  } catch (error) {
+    return {
+      content: [{ type: "text", text: `Error: ${error}` }],
+      isError: true,
+    };
+  }
+}
+
+export async function handleStartStudySessionFromScratch({
+  studyLanguage,
+  difficulty,
+  deck,
+}: StartStudySessionFromScratchInput): Promise<CallToolResult> {
+  try {
+    return {
+      structuredContent: {
+        studyLanguage,
+        difficulty,
+        deck,
+      },
+      content: [
+        {
+          type: "text",
+          text: `Study session started with ${deck.length} ${studyLanguage} flashcards at ${difficulty} level. Widget shown with interactive flashcards for studying.`,
         },
       ],
       isError: false,
