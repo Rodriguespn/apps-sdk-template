@@ -9,12 +9,6 @@ export type SelectDeckInput = {
   userId?: string;
 };
 
-export type CreateFlashcardDeckInput = {
-  studyLanguage?: Language;
-  deckLength?: number;
-  difficulty?: Difficulty;
-};
-
 export type SaveDeckInput = {
   name: string;
   language: Language;
@@ -56,38 +50,6 @@ export async function handleSelectDeck({ userId }: SelectDeckInput): Promise<Cal
   } catch (error) {
     return {
       content: [{ type: "text", text: `Error fetching decks: ${error}` }],
-      isError: true,
-    };
-  }
-}
-
-export async function handleCreateFlashcardDeck({
-  studyLanguage,
-  deckLength,
-  difficulty,
-}: CreateFlashcardDeckInput): Promise<CallToolResult> {
-  try {
-    const finalLanguage = studyLanguage ?? "spanish";
-    const finalLength = deckLength ?? 10;
-    const finalDifficulty = difficulty ?? "beginner";
-
-    return {
-      structuredContent: {
-        studyLanguage: finalLanguage,
-        deckLength: finalLength,
-        difficulty: finalDifficulty,
-      },
-      content: [
-        {
-          type: "text",
-          text: `Deck configuration received: ${finalLength} ${finalLanguage} flashcards at ${finalDifficulty} level. Now generate a flashcard deck with appropriate vocabulary and call saveDeck to save it, then call startStudySession with the saved deck ID.`,
-        },
-      ],
-      isError: false,
-    };
-  } catch (error) {
-    return {
-      content: [{ type: "text", text: `Error: ${error}` }],
       isError: true,
     };
   }

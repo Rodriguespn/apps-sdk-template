@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
-  handleCreateFlashcardDeck,
   handleStartStudySessionFromDeck,
   handleStartStudySessionFromScratch,
   handleSelectDeck,
@@ -55,35 +54,6 @@ describe("selectDeck handler", () => {
     expect(result.isError).toBe(false);
     expect(result.structuredContent).toHaveProperty("decks", mockDecks);
     expect(result.content?.[0]).toHaveProperty("text", expect.stringContaining("Found 1 deck(s)"));
-  });
-});
-
-describe("createFlashcardDeck handler", () => {
-  it("returns default values when no input provided", async () => {
-    const result = await handleCreateFlashcardDeck({});
-
-    expect(result.isError).toBe(false);
-    expect(result.structuredContent).toEqual({
-      studyLanguage: "spanish",
-      deckLength: 10,
-      difficulty: "beginner",
-    });
-  });
-
-  it("returns provided values when input is given", async () => {
-    const result = await handleCreateFlashcardDeck({
-      studyLanguage: "french",
-      deckLength: 25,
-      difficulty: "advanced",
-    });
-
-    expect(result.isError).toBe(false);
-    expect(result.structuredContent).toEqual({
-      studyLanguage: "french",
-      deckLength: 25,
-      difficulty: "advanced",
-    });
-    expect(result.content?.[0]).toHaveProperty("text", expect.stringContaining("saveDeck"));
   });
 });
 

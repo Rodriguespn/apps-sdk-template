@@ -35,7 +35,7 @@ const SelectDeck = () => {
 
   const handleCreateDeck = () => {
     sendFollowUpMessage(
-      "The user wants to create a new flashcard deck. Please show them the deck creation interface by calling createFlashcardDeck."
+      "The user wants to create a new flashcard deck. Please ask them what language they want to study, the difficulty level (beginner, intermediate, or advanced), and how many cards they want. Then generate appropriate vocabulary flashcards and save the deck by calling saveDeck with the name, language, difficulty, and cards array. After saving, start a study session with the new deck."
     );
   };
 
