@@ -7,7 +7,7 @@
   "packageManager": "pnpm@10.18.3",
   "scripts": {
     "dev": "pnpm --filter @study-buddy/server dev",
-    "build": "pnpm web:build && rm -rf server/dist && pnpm --filter=@study-buddy/server --prod deploy server/dist && cp -r web/dist server/dist/assets && pnpm --filter=@study-buddy/server build",
+    "build": "pnpm --filter @study-buddy/shared build && pnpm web:build && rm -rf server/dist && pnpm --filter=@study-buddy/server --prod deploy server/dist && cp -r web/dist server/dist/assets && pnpm --filter=@study-buddy/server build",
     "test": "pnpm --filter @study-buddy/server test --run",
     "start": "pnpm server:start",
     "inspector": "pnpm --filter @study-buddy/server inspector",
