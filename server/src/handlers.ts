@@ -30,9 +30,7 @@ export type StartStudySessionInput = {
   deck?: Flashcard[];
 };
 
-export async function handleSelectDeck({
-  userId,
-}: SelectDeckInput): Promise<CallToolResult> {
+export async function handleSelectDeck({ userId }: SelectDeckInput): Promise<CallToolResult> {
   try {
     const effectiveUserId = userId ?? TEMP_USER_ID;
     const decks = await getDecksForUser(effectiveUserId);
@@ -45,9 +43,10 @@ export async function handleSelectDeck({
       content: [
         {
           type: "text",
-          text: decks.length > 0
-            ? `Found ${decks.length} deck(s) for the user. The widget is displayed with options to select an existing deck or create a new one.`
-            : `No decks found. The widget is displayed with an option to create a new deck.`,
+          text:
+            decks.length > 0
+              ? `Found ${decks.length} deck(s) for the user. The widget is displayed with options to select an existing deck or create a new one.`
+              : `No decks found. The widget is displayed with an option to create a new deck.`,
         },
       ],
       isError: false,
@@ -157,7 +156,12 @@ export async function handleStartStudySession({
       finalDifficulty = difficulty;
     } else {
       return {
-        content: [{ type: "text", text: "Either deckId or (studyLanguage, difficulty, deck) must be provided" }],
+        content: [
+          {
+            type: "text",
+            text: "Either deckId or (studyLanguage, difficulty, deck) must be provided",
+          },
+        ],
         isError: true,
       };
     }

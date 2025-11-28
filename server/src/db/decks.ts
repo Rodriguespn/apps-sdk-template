@@ -68,11 +68,7 @@ export async function createDeck(input: CreateDeckInput): Promise<Deck> {
  * Delete a deck
  */
 export async function deleteDeck(deckId: string, userId: string): Promise<boolean> {
-  const { error } = await supabase
-    .from("decks")
-    .delete()
-    .eq("id", deckId)
-    .eq("user_id", userId);
+  const { error } = await supabase.from("decks").delete().eq("id", deckId).eq("user_id", userId);
 
   if (error) {
     throw new Error(`Failed to delete deck: ${error.message}`);

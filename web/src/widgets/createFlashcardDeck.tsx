@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { mountWidget, useToolOutput, useCallTool, type CallToolResponse } from "skybridge/web";
+import { useSendFollowUpMessage } from "../hooks/useSendFollowUpMessage";
+import { mountWidget, useToolOutput } from "skybridge/web";
 import "@/index.css";
 import { type Language, type Difficulty, LANGUAGES, DIFFICULTIES } from "@study-buddy/shared";
 import {
@@ -23,6 +24,7 @@ type WidgetProps = {
 
 const CreateFlashcardDeck: React.FC = () => {
   const toolOutput = useToolOutput() as WidgetProps;
+  const { sendFollowUpMessage } = useSendFollowUpMessage();
   const theme = window.openai?.theme || "light";
   const tokens = getThemeTokens(theme);
 
@@ -37,26 +39,20 @@ const CreateFlashcardDeck: React.FC = () => {
     toolOutput?.difficulty ?? "beginner"
   );
 
-  const { callTool, isPending } = useCallTool<
-    { studyLanguage: Language; deckLength: number; difficulty: Difficulty },
-    CallToolResponse
-  >("createFlashcardDeck");
-
   const handleGenerateDeck = () => {
-    callTool({
-      studyLanguage: selectedLanguage,
-      deckLength: selectedDeckLength,
-      difficulty: selectedDifficulty,
-    });
+    sendFollowUpMessage(
+      `Please generate a flashcard deck with the following configuration:
+Language: ${selectedLanguage}
+Number of Cards: ${selectedDeckLength}
+Difficulty Level: ${selectedDifficulty}`
+    );
   };
 
   return (
     <div className={`${tokens.bg} rounded-xl shadow-lg p-8 max-w-2xl mx-auto`}>
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className={`text-3xl font-bold ${tokens.text} mb-2`}>
-          Create Flashcard Deck
-        </h1>
+        <h1 className={`text-3xl font-bold ${tokens.text} mb-2`}>Create Flashcard Deck</h1>
         <p className={`text-sm ${tokens.subtext}`}>
           Configure your deck and generate flashcards with AI
         </p>
@@ -119,7 +115,9 @@ const CreateFlashcardDeck: React.FC = () => {
           <select
             id="difficulty-select"
             value={selectedDifficulty}
-            onChange={(e) => setSelectedDifficulty((e.target as HTMLSelectElement).value as Difficulty)}
+            onChange={(e) =>
+              setSelectedDifficulty((e.target as HTMLSelectElement).value as Difficulty)
+            }
             className={`w-full px-4 py-3 rounded-xl border-2 ${tokens.input} ${tokens.text} font-medium shadow-md transition-all ${tokens.hover} focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer`}
           >
             {DIFFICULTIES.map((diff) => (
@@ -152,7 +150,7 @@ const CreateFlashcardDeck: React.FC = () => {
             <span
               className="px-3 py-1 rounded-full text-xs font-semibold text-white"
               style={{
-                background: `linear-gradient(to right, ${difficultyColorStyles[selectedDifficulty].from}, ${difficultyColorStyles[selectedDifficulty].to})`
+                background: `linear-gradient(to right, ${difficultyColorStyles[selectedDifficulty].from}, ${difficultyColorStyles[selectedDifficulty].to})`,
               }}
             >
               {difficultyLabels[selectedDifficulty]}
@@ -171,10 +169,9 @@ const CreateFlashcardDeck: React.FC = () => {
         <button
           type="button"
           onClick={handleGenerateDeck}
-          disabled={isPending}
           className={`w-full px-6 py-4 rounded-xl font-bold text-lg text-white bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100`}
         >
-          {isPending ? "Starting Session..." : "Start Study Session"}
+          {"Start Study Session"}
         </button>
       </div>
     </div>

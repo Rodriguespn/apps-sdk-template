@@ -56,12 +56,8 @@ const SelectDeck = () => {
     <div className={`${tokens.bg} rounded-xl shadow-lg p-8 max-w-3xl mx-auto`}>
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className={`text-3xl font-bold ${tokens.text} mb-2`}>
-          Your Flashcard Decks
-        </h1>
-        <p className={`text-sm ${tokens.subtext}`}>
-          Select a deck to study or create a new one
-        </p>
+        <h1 className={`text-3xl font-bold ${tokens.text} mb-2`}>Your Flashcard Decks</h1>
+        <p className={`text-sm ${tokens.subtext}`}>Select a deck to study or create a new one</p>
       </div>
 
       {/* Create New Deck Button */}
@@ -96,17 +92,13 @@ const SelectDeck = () => {
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className={`text-lg font-bold ${tokens.text} mb-1 truncate`}>
-                    {deck.name}
-                  </h3>
+                  <h3 className={`text-lg font-bold ${tokens.text} mb-1 truncate`}>{deck.name}</h3>
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className={`text-sm ${tokens.subtext}`}>
                       {languageNames[deck.language]}
                     </span>
                     <span className={`text-sm ${tokens.subtext}`}>•</span>
-                    <span className={`text-sm ${tokens.subtext}`}>
-                      {deck.cards.length} cards
-                    </span>
+                    <span className={`text-sm ${tokens.subtext}`}>{deck.cards.length} cards</span>
                     <span className={`text-sm ${tokens.subtext}`}>•</span>
                     <span className={`text-sm ${tokens.subtext}`}>
                       {formatDate(deck.created_at)}

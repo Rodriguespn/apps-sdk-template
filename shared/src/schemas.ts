@@ -23,7 +23,9 @@ export const LanguageSchema: z.ZodType<Language> = z.enum(LANGUAGES as [Language
 /**
  * Schema for difficulty levels
  */
-export const DifficultySchema: z.ZodType<Difficulty> = z.enum(DIFFICULTIES as [Difficulty, ...Difficulty[]]);
+export const DifficultySchema: z.ZodType<Difficulty> = z.enum(
+  DIFFICULTIES as [Difficulty, ...Difficulty[]]
+);
 
 /**
  * Schema for a single flashcard

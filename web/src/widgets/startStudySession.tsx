@@ -2,11 +2,7 @@ import { useState } from "react";
 import { mountWidget, useToolOutput } from "skybridge/web";
 import "@/index.css";
 import { type Language, type Difficulty, type Flashcard } from "@study-buddy/shared";
-import {
-  languageNames,
-  difficultyColorStyles,
-  getThemeTokens,
-} from "./shared/shared-flashcard";
+import { languageNames, difficultyColorStyles, getThemeTokens } from "./shared/shared-flashcard";
 
 /*
  * startStudySession widget
@@ -48,24 +44,32 @@ const StartStudySession = () => {
     <div className={`${tokens.bg} rounded-xl shadow-lg p-8 max-w-2xl mx-auto`}>
       {/* Header */}
       <div className="text-center mb-6">
-        <h1 className={`text-3xl font-bold ${tokens.text} mb-2`}>{languageNames[studyLanguage]} Study Session</h1>
+        <h1 className={`text-3xl font-bold ${tokens.text} mb-2`}>
+          {languageNames[studyLanguage]} Study Session
+        </h1>
         <div className="flex justify-center items-center gap-2">
           <span
             className="px-3 py-1 rounded-full text-sm font-semibold text-white"
             style={{
-              background: `linear-gradient(to right, ${difficultyColorStyles[difficulty].from}, ${difficultyColorStyles[difficulty].to})`
+              background: `linear-gradient(to right, ${difficultyColorStyles[difficulty].from}, ${difficultyColorStyles[difficulty].to})`,
             }}
           >
             {difficulty ? difficulty.charAt(0).toUpperCase() + difficulty.slice(1) : "Unknown"}
           </span>
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${tokens.subtext} border border-current`}>{deck.length} cards</span>
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-medium ${tokens.subtext} border border-current`}
+          >
+            {deck.length} cards
+          </span>
         </div>
       </div>
 
       {/* Empty state if no cards */}
       {deck.length === 0 && (
         <div className={`mb-6 rounded-lg border-2 ${tokens.surface} p-6 text-center`}>
-          <p className={`text-sm ${tokens.subtext}`}>No cards to study. Please provide a deck with flashcards.</p>
+          <p className={`text-sm ${tokens.subtext}`}>
+            No cards to study. Please provide a deck with flashcards.
+          </p>
         </div>
       )}
 
@@ -74,12 +78,19 @@ const StartStudySession = () => {
         <div
           className={`relative w-full h-72 cursor-pointer transition-transform duration-500 preserve-3d ${isFlipped ? "rotate-y-180" : ""}`}
           onClick={flip}
-          style={{ transformStyle: "preserve-3d", transform: isFlipped ? "rotateY(180deg)" : "rotateY(0)" }}
+          style={{
+            transformStyle: "preserve-3d",
+            transform: isFlipped ? "rotateY(180deg)" : "rotateY(0)",
+          }}
         >
           {/* Front */}
           <div className="absolute inset-0" style={{ backfaceVisibility: "hidden" }}>
-            <div className={`w-full h-full rounded-2xl shadow-xl border-2 ${tokens.surface} flex flex-col items-center justify-center p-8`}>
-              <p className={`text-xs ${tokens.subtext} mb-3 uppercase tracking-wider font-medium`}>Word</p>
+            <div
+              className={`w-full h-full rounded-2xl shadow-xl border-2 ${tokens.surface} flex flex-col items-center justify-center p-8`}
+            >
+              <p className={`text-xs ${tokens.subtext} mb-3 uppercase tracking-wider font-medium`}>
+                Word
+              </p>
               <h2 className={`text-4xl font-bold ${tokens.text} mb-4`}>
                 {deck[currentIndex]?.word || `Card ${currentIndex + 1}`}
               </h2>
@@ -87,14 +98,19 @@ const StartStudySession = () => {
             </div>
           </div>
           {/* Back */}
-          <div className="absolute inset-0" style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
+          <div
+            className="absolute inset-0"
+            style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+          >
             <div
               className="w-full h-full rounded-2xl shadow-xl flex flex-col items-center justify-center p-8"
               style={{
-                background: `linear-gradient(to bottom right, ${difficultyColorStyles[difficulty].from}, ${difficultyColorStyles[difficulty].to})`
+                background: `linear-gradient(to bottom right, ${difficultyColorStyles[difficulty].from}, ${difficultyColorStyles[difficulty].to})`,
               }}
             >
-              <p className="text-xs text-white/80 mb-3 uppercase tracking-wider font-medium">Translation</p>
+              <p className="text-xs text-white/80 mb-3 uppercase tracking-wider font-medium">
+                Translation
+              </p>
               <h2 className="text-4xl font-bold text-white mb-4">
                 {deck[currentIndex]?.translation || "(No translation)"}
               </h2>
@@ -109,14 +125,16 @@ const StartStudySession = () => {
         <>
           <div className={`text-center mb-4 rounded-lg border ${tokens.surface} p-3`}>
             <p className={`text-xs ${tokens.subtext} mb-1 uppercase tracking-wider`}>Progress</p>
-            <p className={`text-lg font-bold ${tokens.text}`}>{currentIndex + 1} / {deck.length}</p>
+            <p className={`text-lg font-bold ${tokens.text}`}>
+              {currentIndex + 1} / {deck.length}
+            </p>
           </div>
           <div className={`w-full h-2 rounded-full overflow-hidden border ${tokens.surface} mb-6`}>
             <div
               className="h-full transition-all duration-300"
               style={{
                 width: `${((currentIndex + 1) / deck.length) * 100}%`,
-                background: `linear-gradient(to right, ${difficultyColorStyles[difficulty].from}, ${difficultyColorStyles[difficulty].to})`
+                background: `linear-gradient(to right, ${difficultyColorStyles[difficulty].from}, ${difficultyColorStyles[difficulty].to})`,
               }}
             />
           </div>

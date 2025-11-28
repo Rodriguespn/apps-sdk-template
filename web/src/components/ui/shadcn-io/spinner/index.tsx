@@ -30,7 +30,13 @@ const CircleFilled = ({ className, size = 24, ...props }: SpinnerVariantProps) =
 
 const Ellipsis = ({ size = 24, ...props }: SpinnerVariantProps) => {
   return (
-    <svg height={size} viewBox="0 0 24 24" width={size} xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
       <title>Loading...</title>
       <circle cx="4" cy="12" fill="currentColor" r="2">
         <animate
@@ -154,8 +160,22 @@ const Bars = ({ size = 24, ...props }: SpinnerVariantProps) => (
       }
     `}</style>
     <rect className="spinner-bar" fill="currentColor" height="22" width="6" x="1" y="1" />
-    <rect className="spinner-bar spinner-bars-2" fill="currentColor" height="22" width="6" x="9" y="1" />
-    <rect className="spinner-bar spinner-bars-3" fill="currentColor" height="22" width="6" x="17" y="1" />
+    <rect
+      className="spinner-bar spinner-bars-2"
+      fill="currentColor"
+      height="22"
+      width="6"
+      x="9"
+      y="1"
+    />
+    <rect
+      className="spinner-bar spinner-bars-3"
+      fill="currentColor"
+      height="22"
+      width="6"
+      x="17"
+      y="1"
+    />
   </svg>
 );
 
@@ -193,7 +213,15 @@ const Infinite = ({ size = 24, ...props }: SpinnerVariantProps) => (
 );
 
 export type SpinnerProps = LucideProps & {
-  variant?: "default" | "circle" | "pinwheel" | "circle-filled" | "ellipsis" | "ring" | "bars" | "infinite";
+  variant?:
+    | "default"
+    | "circle"
+    | "pinwheel"
+    | "circle-filled"
+    | "ellipsis"
+    | "ring"
+    | "bars"
+    | "infinite";
 };
 
 export const Spinner = ({ variant, ...props }: SpinnerProps) => {

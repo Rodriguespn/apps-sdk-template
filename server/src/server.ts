@@ -1,11 +1,6 @@
 import { z } from "zod";
 import { McpServer } from "skybridge/server";
-import {
-  LanguageSchema,
-  DifficultySchema,
-  LANGUAGES,
-  DIFFICULTIES,
-} from "@study-buddy/shared";
+import { LanguageSchema, DifficultySchema, LANGUAGES, DIFFICULTIES } from "@study-buddy/shared";
 import {
   handleSelectDeck,
   handleCreateFlashcardDeck,
@@ -18,7 +13,7 @@ const server = new McpServer(
     name: "flashcard-app",
     version: "0.0.1",
   },
-  { capabilities: {} },
+  { capabilities: {} }
 );
 
 // Widget for selecting an existing deck or creating a new one
@@ -34,7 +29,7 @@ server.widget(
       userId: z.string().optional().describe("User ID (optional, uses default if not provided)"),
     },
   },
-  handleSelectDeck,
+  handleSelectDeck
 );
 
 // Widget for creating a new flashcard deck
@@ -56,13 +51,15 @@ server.widget(
         .min(1)
         .max(200)
         .optional()
-        .describe("Number of flashcards to include in the deck. Common options: 5, 10, 15, 20, 25, 30, 40, 50. Range: 1-200"),
+        .describe(
+          "Number of flashcards to include in the deck. Common options: 5, 10, 15, 20, 25, 30, 40, 50. Range: 1-200"
+        ),
       difficulty: DifficultySchema.optional().describe(
         `Difficulty level of the flashcards. Options: ${DIFFICULTIES.join(", ")}`
       ),
     },
   },
-  handleCreateFlashcardDeck,
+  handleCreateFlashcardDeck
 );
 
 // Tool for saving a deck to the database
@@ -82,7 +79,7 @@ server.tool(
       )
       .describe("Array of flashcards to save"),
   },
-  handleSaveDeck,
+  handleSaveDeck
 );
 
 // Widget for starting a study session
@@ -113,7 +110,7 @@ server.widget(
         .describe("Array of flashcards (required if not using deckId)"),
     },
   },
-  handleStartStudySession,
+  handleStartStudySession
 );
 
 export default server;

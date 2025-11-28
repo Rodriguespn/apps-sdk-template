@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { handleCreateFlashcardDeck, handleStartStudySession, handleSelectDeck, handleSaveDeck } from "../handlers.js";
+import {
+  handleCreateFlashcardDeck,
+  handleStartStudySession,
+  handleSelectDeck,
+  handleSaveDeck,
+} from "../handlers.js";
 
 // Mock the database module
 vi.mock("../db/decks.js", () => ({
@@ -104,7 +109,10 @@ describe("saveDeck handler", () => {
 
     expect(result.isError).toBe(false);
     expect(result.structuredContent).toHaveProperty("deck", mockDeck);
-    expect(result.content?.[0]).toHaveProperty("text", expect.stringContaining("saved successfully"));
+    expect(result.content?.[0]).toHaveProperty(
+      "text",
+      expect.stringContaining("saved successfully")
+    );
   });
 });
 
