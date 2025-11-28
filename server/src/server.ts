@@ -97,4 +97,21 @@ server.widget(
   handleStartStudySessionFromScratch
 );
 
+// Prompt for creating a new French study session
+server.prompt(
+  "study-french-beginner",
+  "Create a new study session to study french with a deck with 10 cards and difficulty beginner",
+  () => ({
+    messages: [
+      {
+        role: "user",
+        content: {
+          type: "text",
+          text: "Create a new study session to study french with a deck with 10 cards and difficulty beginner",
+        },
+      },
+    ],
+  })
+);
+
 export default server;
