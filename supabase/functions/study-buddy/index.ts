@@ -11,11 +11,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { Hono } from "hono";
 import { StreamableHTTPServerTransport } from "npm:@modelcontextprotocol/sdk@1.20.0/server/streamableHttp.js";
 
-import {
-  extractBearerToken,
-  validateToken,
-  getWWWAuthenticateHeader,
-} from "./src/auth.ts";
+import { extractBearerToken, validateToken, getWWWAuthenticateHeader } from "./src/auth.ts";
 import { createAuthenticatedClient } from "./src/supabase.ts";
 import { createMcpServer } from "./src/server.ts";
 import { env } from "./src/env.ts";
@@ -87,8 +83,7 @@ app.post("/mcp", async (c) => {
     const body = await c.req.json();
     return await transport.handleRequest(c.req.raw, undefined, body);
   } catch (error) {
-    const isExpired =
-      error instanceof Error && error.message.includes("exp");
+    const isExpired = error instanceof Error && error.message.includes("exp");
 
     return c.json(
       {

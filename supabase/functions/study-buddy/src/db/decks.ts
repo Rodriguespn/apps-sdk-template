@@ -4,13 +4,7 @@
  */
 
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type {
-  Category,
-  CreateDeckInput,
-  Deck,
-  Difficulty,
-  Language,
-} from "../shared/types.ts";
+import type { Category, CreateDeckInput, Deck, Difficulty, Language } from "../shared/types.ts";
 
 export type SearchDecksFilters = {
   language?: Language;
@@ -22,10 +16,7 @@ export type SearchDecksFilters = {
  * Get all decks for a user.
  * Uses authenticated Supabase client with RLS enforcement.
  */
-export async function getDecksForUser(
-  supabase: SupabaseClient,
-  userId: string
-): Promise<Deck[]> {
+export async function getDecksForUser(supabase: SupabaseClient, userId: string): Promise<Deck[]> {
   const { data, error } = await supabase
     .from("decks")
     .select("*")
@@ -69,10 +60,7 @@ export async function getDeckById(
  * Create a new deck.
  * Uses authenticated Supabase client with RLS enforcement.
  */
-export async function createDeck(
-  supabase: SupabaseClient,
-  input: CreateDeckInput
-): Promise<Deck> {
+export async function createDeck(supabase: SupabaseClient, input: CreateDeckInput): Promise<Deck> {
   const { data, error } = await supabase
     .from("decks")
     .insert({
@@ -102,11 +90,7 @@ export async function deleteDeck(
   deckId: string,
   userId: string
 ): Promise<boolean> {
-  const { error } = await supabase
-    .from("decks")
-    .delete()
-    .eq("id", deckId)
-    .eq("user_id", userId);
+  const { error } = await supabase.from("decks").delete().eq("id", deckId).eq("user_id", userId);
 
   if (error) {
     throw new Error(`Failed to delete deck: ${error.message}`);

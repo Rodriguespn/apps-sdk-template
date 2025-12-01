@@ -5,18 +5,8 @@
 
 import type { CallToolResult } from "npm:@modelcontextprotocol/sdk@1.20.0/types.js";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type {
-  Category,
-  Difficulty,
-  Flashcard,
-  Language,
-} from "./shared/types.ts";
-import {
-  createDeck,
-  getDeckById,
-  getDecksForUser,
-  searchDecks,
-} from "./db/decks.ts";
+import type { Category, Difficulty, Flashcard, Language } from "./shared/types.ts";
+import { createDeck, getDeckById, getDecksForUser, searchDecks } from "./db/decks.ts";
 
 /**
  * Handler context passed to all handlers.

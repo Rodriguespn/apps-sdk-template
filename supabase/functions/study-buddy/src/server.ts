@@ -40,8 +40,7 @@ export function createMcpServer(getContext: () => HandlerContext) {
   server.widget(
     "listDecks",
     {
-      description:
-        "Display all user's flashcard decks with option to create new ones",
+      description: "Display all user's flashcard decks with option to create new ones",
     },
     {
       description:
@@ -74,12 +73,8 @@ export function createMcpServer(getContext: () => HandlerContext) {
     "saveDeck",
     "Save a new flashcard deck to the database. IMPORTANT: Only use this tool AFTER calling searchDeck and finding no suitable existing decks. Do not create new decks if the user already has matching decks.",
     {
-      name: z
-        .string()
-        .describe("Name for the deck (e.g., 'French Beginner - Food & Drinks')"),
-      language: LanguageSchema.describe(
-        `Language of the deck. Options: ${LANGUAGES.join(", ")}`
-      ),
+      name: z.string().describe("Name for the deck (e.g., 'French Beginner - Food & Drinks')"),
+      language: LanguageSchema.describe(`Language of the deck. Options: ${LANGUAGES.join(", ")}`),
       difficulty: DifficultySchema.describe(
         `Difficulty level. Options: ${DIFFICULTIES.join(", ")}`
       ),
@@ -102,17 +97,13 @@ export function createMcpServer(getContext: () => HandlerContext) {
   server.widget(
     "startStudySessionFromDeck",
     {
-      description:
-        "Start a language flashcard study session from a saved deck (preferred)",
+      description: "Start a language flashcard study session from a saved deck (preferred)",
     },
     {
       description:
         "Use this tool to start a study session by loading a saved deck from the database. This is the PREFERRED way to start a study session. Always try to use an existing deck from searchDeck results before creating a new one.",
       inputSchema: {
-        deckId: z
-          .string()
-          .uuid()
-          .describe("ID of a saved deck to load from the database"),
+        deckId: z.string().uuid().describe("ID of a saved deck to load from the database"),
       },
     },
     (input) => handleStartStudySessionFromDeck(input, getContext())
@@ -122,8 +113,7 @@ export function createMcpServer(getContext: () => HandlerContext) {
   server.widget(
     "startStudySessionFromScratch",
     {
-      description:
-        "Start a language flashcard study session with provided deck data (fallback)",
+      description: "Start a language flashcard study session with provided deck data (fallback)",
     },
     {
       description:
@@ -138,12 +128,8 @@ export function createMcpServer(getContext: () => HandlerContext) {
         deck: z
           .array(
             z.object({
-              word: z
-                .string()
-                .describe("The word or phrase in the target language"),
-              translation: z
-                .string()
-                .describe("The translation of the word in English"),
+              word: z.string().describe("The word or phrase in the target language"),
+              translation: z.string().describe("The translation of the word in English"),
             })
           )
           .describe("Array of flashcards to study"),

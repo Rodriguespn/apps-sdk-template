@@ -6,7 +6,10 @@
  */
 
 import { McpServer as BaseMcpServer } from "npm:@modelcontextprotocol/sdk@1.20.0/server/mcp.js";
-import type { CallToolResult, GetPromptResult } from "npm:@modelcontextprotocol/sdk@1.20.0/types.js";
+import type {
+  CallToolResult,
+  GetPromptResult,
+} from "npm:@modelcontextprotocol/sdk@1.20.0/types.js";
 import type { ZodRawShape } from "zod";
 
 import { renderWidgetHtml } from "./templates.ts";
@@ -97,17 +100,18 @@ export class McpServer {
     inputSchema: T,
     handler: ToolHandler
   ): void {
-    this.server.tool(name, description, inputSchema, handler as (input: Record<string, unknown>) => Promise<CallToolResult>);
+    this.server.tool(
+      name,
+      description,
+      inputSchema,
+      handler as (input: Record<string, unknown>) => Promise<CallToolResult>
+    );
   }
 
   /**
    * Register a prompt (pass-through to base McpServer).
    */
-  prompt(
-    name: string,
-    description: string,
-    handler: PromptHandler
-  ): void {
+  prompt(name: string, description: string, handler: PromptHandler): void {
     this.server.prompt(name, description, handler);
   }
 

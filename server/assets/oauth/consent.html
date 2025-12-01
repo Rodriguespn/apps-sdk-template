@@ -296,7 +296,7 @@
     async function init() {
       try {
         // Fetch configuration from server
-        const configRes = await fetch('/oauth/config.json');
+        const configRes = await fetch('/assets/config.json');
         if (!configRes.ok) {
           showError('Configuration error. Please contact support.');
           return;

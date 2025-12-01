@@ -58,21 +58,11 @@ run("pnpm --filter @study-buddy/web build", "Building web package");
 console.log("\n📦 Copying shared types...");
 
 // Copy types.ts as-is (no npm imports)
-const typesContent = fs.readFileSync(
-  path.join(ROOT, "shared/src/types.ts"),
-  "utf8"
-);
-writeFile(
-  path.join(EDGE_FN, "src/shared/types.ts"),
-  typesContent,
-  "Copying types.ts"
-);
+const typesContent = fs.readFileSync(path.join(ROOT, "shared/src/types.ts"), "utf8");
+writeFile(path.join(EDGE_FN, "src/shared/types.ts"), typesContent, "Copying types.ts");
 
 // Copy schemas.ts with Deno-compatible imports and re-export constants
-let schemasContent = fs.readFileSync(
-  path.join(ROOT, "shared/src/schemas.ts"),
-  "utf8"
-);
+let schemasContent = fs.readFileSync(path.join(ROOT, "shared/src/schemas.ts"), "utf8");
 // Update imports for Deno
 schemasContent = schemasContent.replace(/from "zod"/g, 'from "zod"');
 schemasContent = schemasContent.replace(/\.\/types\.js/g, "./types.ts");
