@@ -79,7 +79,7 @@ export async function handleSearchDeck({
         content: [
           {
             type: "text",
-            text: `No decks found matching the criteria (language: ${language ?? "any"}, difficulty: ${difficulty ?? "any"}, category: ${category ?? "any"}). Create a new deck using saveDeck with the desired language, difficulty, category, and generated flashcards.`,
+            text: `No decks found matching the criteria (language: ${language ?? "any"}, difficulty: ${difficulty ?? "any"}, category: ${category ?? "any"}). Create a new deck with the desired language, difficulty, category, and generated flashcards and call saveDeck to store it.`,
           },
         ],
         isError: false,

@@ -42,6 +42,11 @@ app.options("/.well-known/oauth-protected-resource", (_req, res) => {
   res.sendStatus(204);
 });
 
+// OAuth consent UI configuration (returns public Supabase config)
+app.get("/assets/config.json", (_req, res) => {
+  res.sendFile(path.join(__dirname, "../assets/config.json"));
+});
+
 // Serve OAuth consent UI
 app.get("/assets/oauth/consent", (_req, res) => {
   res.sendFile(path.join(__dirname, "../assets/oauth/consent.html"));
